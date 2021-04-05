@@ -1,0 +1,51 @@
+# Jobs[] arr -> (JobId, DeadLine, Profit)
+# Maximize the profit
+# Approach Time Complexity - O(nlogn) Space Complexity - O(N)
+# get the max deadline from arr
+# initialize a dead[] of size max deadline with -1 and ans(maxProfit)=0.
+# sort the arr[] according to profit in descending order(Our approach is to do max profit work first)
+# iterate over arr if dead[current ele deadline]==-1 this means it is empty right now
+# fill it with jobId and add current ele profit to ans.
+# if not -1 move to previous index of dead[] until we get -1.
+# if so repeat above step and break.
+# else continue iterating arr.
+
+class Solution{
+    // return an array of size 2 having the 0th element equal to the count
+    // and 1st element equal to the maximum profit
+    int[] JobScheduling(Job arr[], int n){
+
+        Arrays.sort(arr, (a,b) -> (b.profit-a.profit));
+
+        int maxDeadLine=-1,maxProfit = 0,count=0;
+        for(int i=0;i<n;i++){
+                maxDeadLine=Math.max(maxDeadLine,arr[i].deadline);
+        }
+
+        int[] dead = new int[maxDeadLine];
+        for(int i=0;i<maxDeadLine;i++) dead[i]=-1;
+
+        for(int i=0;i<n;i++){
+            if(dead[arr[i].deadline-1]==-1){
+                dead[arr[i].deadline-1]=arr[i].id;
+                maxProfit+=arr[i].profit;
+                count++;
+            }else{
+                int j = arr[i].deadline-1;
+                while(j>=0){
+                    if(dead[j]==-1){
+                       dead[j]=arr[i].id;
+                       maxProfit+=arr[i].profit;
+                       count++;
+                       break;
+                    }
+                    j--;
+                }
+            }
+        }
+
+        int[] res = new int[2];
+        res[0]= count; res[1] = maxProfit;
+        return res;
+    }
+}
